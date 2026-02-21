@@ -2,7 +2,7 @@
   "id": "markdown_importer",
   "title": "Markdown Importer for Foundry VTT",
   "description": "Converts Markdown to ProseMirror formatting. Injects a button in the ProseMirror menu and provides an option to convert Markdown on each save.",
-  "version": "1.0.0",
+  "version": "13.0.0",
   "compatibility": {
     "minimum": "11",
     "verified": "13"

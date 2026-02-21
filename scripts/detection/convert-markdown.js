@@ -79,10 +79,33 @@ export function getShowdownConverter() {
   const showdown = globalThis.showdown;
   if (!showdown?.Converter) return null;
 
+  const foundryLinks = [];
+  const placeholderPrefix = "FOUNDRYLINK" + Math.random().toString(36).substring(2, 8);
+  
+  const foundryExtension = [
+    {
+      type: 'lang',
+      regex: /(@(?:UUID|Compendium|Item|Actor|JournalEntry|RollTable|Cards|Macro|Scene|Playlist)\[[^\]]+\](?:{[^}]+})?|\[\[\/[^\]]+\]\])/g,
+      replace: (match) => {
+        const id = foundryLinks.length;
+        foundryLinks.push(match);
+        return `${placeholderPrefix}${id}${placeholderPrefix}`;
+      }
+    },
+    {
+      type: 'output',
+      regex: new RegExp(`${placeholderPrefix}(\\d+)${placeholderPrefix}`, 'g'),
+      replace: (match, id) => {
+        return foundryLinks[id];
+      }
+    }
+  ];
+
   const options = globalThis.CONST?.SHOWDOWN_OPTIONS ?? {};
   return new showdown.Converter({
     ...options,
     tasklists: true,
+    extensions: [foundryExtension]
   });
 }
 

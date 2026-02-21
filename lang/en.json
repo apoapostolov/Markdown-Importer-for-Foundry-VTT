@@ -18,7 +18,8 @@
       "NO_CONVERTER": "Markdown conversion is unavailable: Showdown converter not found.",
       "NO_PARSER": "Convert Markdown could not access a ProseMirror HTML parser in this runtime.",
       "SUCCESS": "Convert Markdown complete.",
-      "FAILED": "Convert Markdown failed. Check console for details."
+      "FAILED": "Convert Markdown failed. Check console for details.",
+      "AUTO_CONVERTED": "Markdown automatically converted on save."
     }
   }
 }

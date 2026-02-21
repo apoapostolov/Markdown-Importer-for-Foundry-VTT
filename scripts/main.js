@@ -29,17 +29,42 @@ function extractTextFromHtml(html) {
   const tempDiv = document.createElement("div");
   tempDiv.innerHTML = html;
 
-  let text = "";
-  for (const node of tempDiv.childNodes) {
-    if (node.nodeName === "P") {
-      text += node.textContent + "\n\n";
-    } else if (node.nodeName === "BR") {
-      text += "\n";
-    } else {
-      text += node.textContent + "\n";
+  function walk(node) {
+    let text = "";
+    for (const child of node.childNodes) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        text += child.textContent;
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        const tag = child.nodeName.toLowerCase();
+        if (tag === "p" || tag === "div") {
+          text += walk(child) + "\n\n";
+        } else if (tag === "br") {
+          text += "\n";
+        } else if (tag === "ul" || tag === "ol") {
+          text += "\n\n" + walk(child) + "\n\n";
+        } else if (tag === "li") {
+          text += "- " + walk(child) + "\n";
+        } else if (["h1", "h2", "h3", "h4", "h5", "h6"].includes(tag)) {
+          const level = tag.substring(1);
+          text += "\n\n" + "#".repeat(level) + " " + walk(child) + "\n\n";
+        } else {
+          // Preserve other HTML tags (like strong, em, span, table, etc.)
+          const inner = walk(child);
+          const outer = child.cloneNode(false).outerHTML;
+          const match = outer.match(/^(<[^>]+>)(.*)(<\/[^>]+>)$/);
+          if (match) {
+            text += match[1] + inner + match[3];
+          } else {
+            // Self-closing tag
+            text += outer;
+          }
+        }
+      }
     }
+    return text;
   }
-  return text.trim();
+  
+  return walk(tempDiv).trim();
 }
 
 Hooks.on("preUpdateJournalEntryPage", (page, changes, options, userId) => {
@@ -57,6 +82,7 @@ Hooks.on("preUpdateJournalEntryPage", (page, changes, options, userId) => {
         const normalizedContent = normalizeMarkdownSource(textContent);
         const html = converter.makeHtml(normalizedContent);
         changes.text.content = html;
+        ui.notifications.info(game.i18n.localize("MARKDOWN_IMPORTER.NOTIFICATIONS.AUTO_CONVERTED"));
       } catch (error) {
         console.error(
           "[Markdown Importer] Failed to convert markdown on save",
