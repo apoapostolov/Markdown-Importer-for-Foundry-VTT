@@ -1,0 +1,24 @@
+{
+  "MARKDOWN_IMPORTER": {
+    "MENU": {
+      "CONVERT_MARKDOWN": {
+        "TITLE": "Convert Markdown"
+      }
+    },
+    "SETTINGS": {
+      "CONVERT_ON_SAVE": {
+        "NAME": "Convert Markdown on each save",
+        "HINT": "If enabled, upon saving a page in a journal, content is checked for markdown formatting and if recognized, it is converted automatically from Markdown to ProseMirror formatting."
+      }
+    },
+    "NOTIFICATIONS": {
+      "NO_EDITOR": "Markdown conversion failed: editor is not available.",
+      "NO_TEXT": "No text found to convert.",
+      "NO_MARKDOWN": "No Markdown formatting detected in the selected text.",
+      "NO_CONVERTER": "Markdown conversion is unavailable: Showdown converter not found.",
+      "NO_PARSER": "Convert Markdown could not access a ProseMirror HTML parser in this runtime.",
+      "SUCCESS": "Convert Markdown complete.",
+      "FAILED": "Convert Markdown failed. Check console for details."
+    }
+  }
+}
